@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Generation of contrast enhanced hepatobiliary phase images from dynamic phase MRI">
+  <meta name="keywords" content="Multi-sequence MRI, Contrast-enhanced MRI synthesis, Generative Adversarial Network (GAN), 
+  U-Net, Denoising Diffusion Probabilistic Model (DDPM), Focal Liver Disease (FLL), Tumor Detection">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Towards Faster Liver MRI: Generating Hepatobiliary Phase MRI with Perceptual and
+    Adversarial Models</title>
+
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.knightlab.com/libs/juxtapose/latest/css/juxtapose.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/img-comp-slider.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- <script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script> -->
+  <script src="./static/js/img-comp-slider.js"></script>
+  <script src="./static/js/index.js"></script>
+
+
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://github.io/jhooge">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://github.io/jhooge">
+            Some other research
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Towards Faster Liver MRI: Generating Hepatobiliary Phase MRI with Perceptual and
+            Adversarial Models</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="mailto:jens.hooge@bayer.com">Jens Hooge</a><sup>a,*</sup>,</span>
+            <span class="author-block">
+              <a href="mailto:gerard.sanroma-guell@bayer.com">Gerard Sanroma-Guell</a><sup>a</sup>,</span>
+            <span class="author-block">
+              <a href="mailto:faidra.stavropoulou@bayer.com">Faidra Stavropoulou</a><sup>a</sup>,
+            </span>
+            <span class="author-block">
+              <a href="mailto:alexander.ullmann@bayer.com">Alexander Ullmann</a><sup>a</sup>,
+            </span>
+            <span class="author-block">
+              <a href="mailto:gesine.knobloch@bayer.com">Gesine Knobloch</a><sup>a</sup>,
+            </span>
+            <span class="author-block">
+              <a href="mailto:mark.klemens@bayer.com">Mark Klemens</a><sup>a</sup>,
+            </span>
+            <span class="author-block">
+              <a href="mailto:carola.schmidt@bayer.com">Carola Schmidt</a><sup>b</sup>
+            </span>
+            <span class="author-block">
+              <a href="mailto:sabine.weckbach@bayer.com">Sabine Weckbach</a><sup>a</sup>
+            </span>
+            <span class="author-block">
+              <a href="mailto:andreas.bolz@bayer.com">Andreas Bolz</a><sup>a</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            
+            <span class="author-block"><sup>a</sup>Bayer AG , Muellerstrasse 178, 13353 Berlin, GERMANY,</span>
+            <span class="author-block"><sup>b</sup>Bayer Inc., 2920 Matheson Boulevard East, Mississauga, CANADA</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Abstract (abs) Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/jhooge"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="https://github.com/jhooge"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Dynamic contrast-enhanced magnetic resonance imaging (DCE-MRI) plays a crucial role in the detection and characterization of 
+            focal liver lesions, with the hepatobiliary phase (HBP) providing critical diagnostic information. However, acquiring HBP images 
+            requires prolonged scan times, posing challenges for patient comfort and scanner efficiency. 
+          </p>
+          <p>
+            In this study, we propose a deep learning approach for synthesizing HBP images from earlier contrast phases (precontrast and transitional), 
+            and compare three alternative generative models: a perceptual U-Net, a perceptual GAN, and a DDPM. We curated a multi-site DCE-MRI dataset from 
+            diverse clinical settings and introduced a contrast evolution score (CES) for data quality assessment, enhancing model performance. 
+            Quantitative evaluation using pixel-wise and perceptual metrics, alongside qualitative assessment through blinded radiological reviews, 
+            revealed that pGAN achieved superior quantitative performance but introduced heterogeneous contrast patterns in out-of-distribution 
+            samples. In contrast, U-Net provided consistent liver enhancement with fewer artifacts. DDPM showed inferior performance due to its 
+            inability to preserve fine structural details. 
+          </p>
+          <p>
+            Our findings demonstrate the potential of synthetic HBP images to reduce MRI acquisition 
+            times while maintaining diagnostic quality, highlighting the clinical applicability of deep learning models for dynamic contrast 
+            enhancement in liver imaging.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+</section>
+
+<section class="section">
+  
+  <!-- Paper video. -->
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-two-fifths">
+      <h2 class="title is-3">Motivation</h2>
+      <div class="motivation">
+        <img src="./static/images/kinetics.gif">
+      </div>
+    </div>
+  </div>
+  <!--/ Paper video. -->
+
+</section>
+
+<section class="section">
+  
+  <!-- Paper video. -->
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-max-desktop">
+      <h2 class="title is-3">Model Synthesis Comparison</h2>
+      <div class="model_comparison">
+        <img src="./static/images/model_comparison.webp">
+      </div>
+    </div>
+  </div>
+  <!--/ Paper video. -->
+</div>
+
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
+      <!-- unet_mse -->
+      <!-- <div class="column is-one-third">
+        <div class="content">
+          <div class="juxtapose">
+            <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
+            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+          </div>
+        </div>
+      </div> -->
+      <!--/ unet_mse -->
+
+      <!-- unet_mid -->
+      <div class="column is-one-quarter">
+        <div class="content">
+          <div class="juxtapose">
+            <img src="./static/images/unet_mid_hbp.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
+            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+          </div>
+        </div>
+      </div>
+      <!--/ unet_mid -->
+
+      <!-- pgan -->
+      <div class="column is-one-quarter">
+        <div class="content">
+          <div class="juxtapose">
+            <img src="./static/images/pgan_hbp.webp" data-label="pGAN HBP" width="256", height="256"/>
+            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+          </div>
+        </div>
+      </div>
+      <!--/ pgan -->
+
+      <!-- ddpm -->
+      <div class="column is-one-quarter">
+        <div class="content">
+          <div class="juxtapose">
+            <img src="./static/images/ddpm_hbp.webp" data-label="DDPM HBP" width="256", height="256"/>
+            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+          </div>
+        </div>
+      </div>
+      <!--/ ddpm -->
+    </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+
+      <!-- Focal Nodular Hyperplasia. -->
+      <div class="column is-two-fifth">
+        <div class="content">
+          <h2 class="title is-3">Focal Nodular Hyperplasia</h2>
+          <p>
+            Some text about FNHs
+          </p>
+          <div class="columns is-centered">
+            <!-- unet_mse -->
+            <!-- <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
+                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div> -->
+            <!--/ unet_mse -->
+      
+            <!-- unet_mid -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mid_fnh.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
+                  <img src="./static/images/real_fnh.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ unet_mid -->
+      
+            <!-- pgan -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/pgan_fnh.webp" data-label="pGAN HBP" width="256", height="256"/>
+                  <img src="./static/images/real_fnh.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ pgan -->
+      
+            <!-- ddpm -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/ddpm_fnh.webp" data-label="DDPM HBP" width="256", height="256"/>
+                  <img src="./static/images/real_fnh.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ ddpm -->
+          </div>
+        </div>
+      </div>
+      <!--/ Focal Nodular Hyperplasia. -->
+
+      <!-- Adenomatosis. -->
+      <div class="column is-two-fifth">
+        <div class="content">
+          <h2 class="title is-3">Adenomatosis</h2>
+          <p>
+            Some text about Adenomae
+          </p>
+          <div class="columns is-centered">
+            <!-- unet_mse -->
+            <!-- <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
+                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div> -->
+            <!--/ unet_mse -->
+      
+            <!-- unet_mid -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mid_adenomatosis.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
+                  <img src="./static/images/real_adenomatosis.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ unet_mid -->
+      
+            <!-- pgan -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/pgan_adenomatosis.webp" data-label="pGAN HBP" width="256", height="256"/>
+                  <img src="./static/images/real_adenomatosis.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ pgan -->
+      
+            <!-- ddpm -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/ddpm_adenomatosis.webp" data-label="DDPM HBP" width="256", height="256"/>
+                  <img src="./static/images/real_adenomatosis.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ ddpm -->
+          </div>
+        </div>
+      </div>
+      <!--/ Adenomatosis. -->
+
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+
+      <!-- Hepatocarcinoma. -->
+      <div class="column is-two-fifth">
+        <div class="content">
+          <h2 class="title is-3">Hepatocellular Carcinoma</h2>
+          <p>
+            Some text about HCCs
+          </p>
+          <div class="columns is-centered">
+            <!-- unet_mse -->
+            <!-- <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
+                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div> -->
+            <!--/ unet_mse -->
+      
+            <!-- unet_mid -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mid_hcc.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
+                  <img src="./static/images/real_hcc.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ unet_mid -->
+      
+            <!-- pgan -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/pgan_hcc.webp" data-label="pGAN HBP" width="256", height="256"/>
+                  <img src="./static/images/real_hcc.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ pgan -->
+      
+            <!-- ddpm -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/ddpm_hcc.webp" data-label="DDPM HBP" width="256", height="256"/>
+                  <img src="./static/images/real_hcc.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ ddpm -->
+          </div>
+        </div>
+      </div>
+      <!--/ Hepatocarcinoma. -->
+
+      <!-- Metastasis. -->
+      <div class="column is-two-fifth">
+        <div class="content">
+          <h2 class="title is-3">Metastasis</h2>
+          <p>
+            Some text about Metastases
+          </p>
+          <div class="columns is-centered">
+            <!-- unet_mse -->
+            <!-- <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
+                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div> -->
+            <!--/ unet_mse -->
+      
+            <!-- unet_mid -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/unet_mid_metastasis.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
+                  <img src="./static/images/real_metastasis.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ unet_mid -->
+      
+            <!-- pgan -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/pgan_metastasis.webp" data-label="pGAN HBP" width="256", height="256"/>
+                  <img src="./static/images/real_metastasis.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ pgan -->
+      
+            <!-- ddpm -->
+            <div class="column is-one-third">
+              <div class="content">
+                <div class="juxtapose">
+                  <img src="./static/images/ddpm_metastasis.webp" data-label="DDPM HBP" width="256", height="256"/>
+                  <img src="./static/images/real_metastasis.webp" data-label="Real HBP" width="256", height="256"/>
+                </div>
+              </div>
+            </div>
+            <!--/ ddpm -->
+          </div>
+        </div>
+      </div>
+      <!--/ Metastasis. -->
+  </div>
+</section>
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{hooge_2025,
+  author    = {Hooge J., Sanroma-Guell G., Stavropoulou F., Ullmann A., Knobloch G., Klemens M., Schmidt C., Weckbach S., Bolz A.},
+  title     = {Towards Faster Liver MRI: Generating Hepatobiliary Phase MRI with Perceptual and
+    Adversarial Models},
+  journal   = {arXiv},
+  year      = {2025},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/jhooge" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
+
+<script src="https://cdn.knightlab.com/libs/juxtapose/latest/js/juxtapose.min.js"></script>
