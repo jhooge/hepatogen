@@ -7,7 +7,7 @@
   <meta name="keywords" content="Multi-sequence MRI, Contrast-enhanced MRI synthesis, Generative Adversarial Network (GAN), 
   U-Net, Denoising Diffusion Probabilistic Model (DDPM), Focal Liver Disease (FLL), Tumor Detection">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Towards Faster Liver MRI: Generating Hepatobiliary Phase MRI with Perceptual and
+  <title>HepatoGEN: Generating Hepatobiliary Phase MRI with Perceptual and
     Adversarial Models</title>
 
   <link rel="icon" href="./static/images/favicon.svg">
@@ -66,7 +66,7 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Towards Faster Liver MRI: Generating Hepatobiliary Phase MRI with Perceptual and
+          <h1 class="title is-1 publication-title">HepatoGEN: Generating Hepatobiliary Phase MRI with Perceptual and
             Adversarial Models</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
@@ -145,16 +145,15 @@
                   </a>
               </span>
               <!-- Dataset Link. -->
-              <span class="link-block">
+              <!-- <span class="link-block">
                 <a href="https://github.com/jhooge"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="far fa-images"></i>
                   </span>
                   <span>Data</span>
-                  </a>
+                </a> -->
             </div>
-
           </div>
         </div>
       </div>
@@ -170,343 +169,275 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Dynamic contrast-enhanced magnetic resonance imaging (DCE-MRI) plays a crucial role in the detection and characterization of 
-            focal liver lesions, with the hepatobiliary phase (HBP) providing critical diagnostic information. However, acquiring HBP images 
-            requires prolonged scan times, posing challenges for patient comfort and scanner efficiency. 
+            Dynamic contrast-enhanced magnetic resonance imaging (DCE-MRI) plays a crucial
+            role in the detection and characterization of focal liver lesions, with the hepatobiliary
+            phase (HBP) providing essential diagnostic information. However, acquiring HBP images requires 
+            prolonged scan times, which may compromise patient comfort and scanner throughput. 
           </p>
+
           <p>
-            In this study, we propose a deep learning approach for synthesizing HBP images from earlier contrast phases (precontrast and transitional), 
-            and compare three alternative generative models: a perceptual U-Net, a perceptual GAN, and a DDPM. We curated a multi-site DCE-MRI dataset from 
-            diverse clinical settings and introduced a contrast evolution score (CES) for data quality assessment, enhancing model performance. 
-            Quantitative evaluation using pixel-wise and perceptual metrics, alongside qualitative assessment through blinded radiological reviews, 
-            revealed that pGAN achieved superior quantitative performance but introduced heterogeneous contrast patterns in out-of-distribution 
-            samples. In contrast, U-Net provided consistent liver enhancement with fewer artifacts. DDPM showed inferior performance due to its 
-            inability to preserve fine structural details. 
+            In this study, we propose a deep learning based approach for synthesizing HBP images from earlier 
+            contrast phases (precontrast and transitional) and compare three generative models: a perceptual U-Net, 
+            a perceptual GAN (pGAN), and a denoising diffusion probabilistic model (DDPM). We curated a multi-site 
+            DCE-MRI dataset from diverse clinical settings and introduced a contrast evolution score (CES)
+            to assess training data quality, enhancing model performance. Quantitative evaluation
+            using pixel-wise and perceptual metrics, combined with qualitative assessment through
+            blinded radiologist reviews, showed that pGAN achieved the best quantitative performance 
+            but introduced heterogeneous contrast in out-of-distribution cases. In contrast,
+            the U-Net produced consistent liver enhancement with fewer artifacts, while DDPM
+            underperformed due to limited preservation of fine structural details.
           </p>
+
           <p>
-            Our findings demonstrate the potential of synthetic HBP images to reduce MRI acquisition 
-            times while maintaining diagnostic quality, highlighting the clinical applicability of deep learning models for dynamic contrast 
-            enhancement in liver imaging.
+            These findings demonstrate the feasibility of synthetic HBP image generation as a means to reduce
+            scan time without compromising diagnostic utility, highlighting the clinical potential of
+            deep learning for dynamic contrast enhancement in liver MRI. 
           </p>
         </div>
       </div>
     </div>
     <!--/ Abstract. -->
+</section>
 
+<section class="section">
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-two-thirds">
+      <h3 class="title is-3">Dynamic Phase Liver MRI Protocol</h3>
+      <div class="content is-centered has-text-justified">
+        <p>
+          Dynamic contrast-enhanced MRI captures the evolving uptake of contrast agent across several phases. 
+          While early phases like arterial and portal venous highlight vascular structures within the first minute, 
+          it takes up to 20 minutes before the liver parenchyma and bile ducts fully enhance—delaying diagnostic imaging.
+        </p>
+      </div>
+      <div class="hero-body">
+        <div class="container is-flex is-justify-content-center is-max-desktop">
+          <img src="./static/images/kinetics_1.png" width="80%"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="column is-two-thirds"></div>
+      <video id="teaser_unet" autoplay muted loop playsinline width="100%">
+        <source src="./static/videos/all_phases.mp4"
+                type="video/mp4">
+      </video>
+    </div>
+</section>
+
+<section class="section">
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-two-thirds">
+      <h3 class="title is-3">Protocol Shortening</h3>
+      <div class="content is-centered has-text-justified">
+        <p>
+          Our generative model leverages earlier phases (precontrast and transitional) to synthesize high-quality 
+          hepatobiliary images, aiming to reduce total scan time, without compromising diagnostic quality.
+        </p>
+      </div>
+        <div class="container is-flex is-justify-content-center is-max-desktop mb-6">
+          <img src="./static/images/kinetics_2.png" width="80%"/>
+        </div>
+      <video id="teaser_unet" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/model_synth.mp4"
+                type="video/mp4">
+    </div>
 </section>
 
 <section class="section">
   
-  <!-- Paper video. -->
   <div class="columns is-centered has-text-centered">
-    <div class="column is-two-fifths">
-      <h2 class="title is-3">Motivation</h2>
-      <div class="motivation">
-        <img src="./static/images/kinetics.gif">
+    <div class="column is-two-thirds">
+      <h2 class="title is-3">Synthesizing the Hepatobiliary Phase: Model Comparison</h2>
+      <div class="content is-centered has-text-justified">
+        <p>
+          We generated synthetic hepatobiliary phase (HBP) images of liver MRI using three generative architectures: 
+          a perceptual U-Net, a perceptual GAN (pGAN), and a denoising diffusion probabilistic model (DDPM), 
+          applied in a slice-wise fashion. Both U-Net and pGAN produced synthetic images with contrast enhancement 
+          and anatomical detail comparable to acquired HBP scans, making them viable for diagnostic use. 
+          In contrast, DDPM consistently over-enhanced liver signal and exhibited pronounced inconsistencies 
+          across axial slices, particularly in regions with high inter-patient variability.
+        </p>
       </div>
+      <video id="teaser_unet" autoplay muted loop playsinline height="100%">
+        <source src="./static/videos/model_comparison.mp4"
+                type="video/mp4">
     </div>
   </div>
-  <!--/ Paper video. -->
-
 </section>
 
-<section class="section">
-  
-  <!-- Paper video. -->
+<section>
   <div class="columns is-centered has-text-centered">
-    <div class="column is-max-desktop">
-      <h2 class="title is-3">Model Synthesis Comparison</h2>
-      <div class="model_comparison">
-        <img src="./static/images/model_comparison.webp">
+    <div class="column is-two-thirds">
+      <h2 class="title is-3">Synthetic Lesion Appearance in the Hepatobiliary Phase</h2>
+      <div class="content is-centered has-text-justified">
+        <p>
+          We highlight the ability of generative models to reproduce fine anatomical details in hepatobiliary phase (HBP) MRI, 
+          which are critical for diagnosing focal liver disease. Using image comparison sliders, you can interactively compare 
+          real and synthetic HBP images for each model. We present three illustrative examples: a hepatocellular carcinoma (HCC), 
+          a focal nodular hyperplasia (FNH) lesion, and hepatic blood vessels. These cases demonstrate how well the models 
+          preserve lesion contrast, shape, and the branching structure of vessels—features essential for accurate clinical 
+          interpretation.
+        </p>
+      </div>
+
+      <div class="column is-two-third">
+        <!-- Focal Nodular Hyperplasia. -->
+        <div class="content is-centered has-text-justified">
+          <h2 class="title is-4">Focal Nodular Hyperplasia</h2>
+          <p>
+            FNH is a benign liver lesion composed of normal hepatocytes and functioning bile ducts. In HBP imaging, 
+            FNH typically appears mildly hyperintense due to uptake of hepatocyte-specific contrast agents, often 
+            featuring a central hypointense scar.
+          </p>
+          <div class="grid">
+            <div class="cell is-column-gap-1">
+              <div class="juxtapose">
+                <img src="./static/images/real_fnh.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/unet_mid_fnh.webp" data-label="U-Net"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_fnh.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/pgan_fnh.webp" data-label="pGAN"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_fnh.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/ddpm_fnh.webp" data-label="DDPM"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/ Focal Nodular Hyperplasia. -->
+
+        <!-- Adenomatosis. -->
+        <!-- <div class="content is-centered has-text-justified">
+          <h2 class="title is-4">Adenomatosis</h2>
+          <p>
+            Hepatocellular adenomas are benign tumors that can appear in multiples (adenomatosis). In the HBP, 
+            adenomas are usually hypointense, as they lack functioning hepatocytes and bile ducts necessary for 
+            contrast uptake. Smaller lesions may be harder to detect, particularly in lower contrast settings.
+          </p>
+          <div class="grid">
+            <div class="cell is-column-gap-1">
+              <div class="juxtapose">
+                <img src="./static/images/real_adenomatosis.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/unet_mid_adenomatosis.webp" data-label="U-Net"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_adenomatosis.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/pgan_adenomatosis.webp" data-label="pGAN"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_adenomatosis.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/ddpm_adenomatosis.webp" data-label="DDPM"/>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <!--/ Adenomatosis. -->
+
+        <!-- Hepatocellular Carcinoma. -->
+        <div class="content is-centered has-text-justified">
+          <h2 class="title is-4">Hepatocellular Carcinoma</h2>
+          <p>
+            HCC is a malignant tumor arising from hepatocytes. In the HBP, HCC lesions are generally hypointense due 
+            to impaired uptake of contrast agents, with well-defined margins and often surrounded by a cirrhotic liver 
+            background.
+          </p>
+          <div class="grid">
+            <div class="cell is-column-gap-1">
+              <div class="juxtapose">
+                <img src="./static/images/real_hcc.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/unet_mid_hcc.webp" data-label="U-Net"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_hcc.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/pgan_hcc.webp" data-label="pGAN"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_hcc.webp" data-label="Acquired HBP"/>
+                <img src="./static/images/ddpm_hcc.webp" data-label="DDPM"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/ Hepatocellular Carcinoma. -->
+
+        <!-- Metastasis. -->
+        <!-- <div class="content is-centered has-text-justified">
+          <h2 class="title is-4">Metastasis</h2>
+          <p>
+            Liver metastases originate from cancers outside the liver. They typically appear as sharply demarcated 
+            hypointense lesions in HBP images, lacking contrast uptake due to the absence of hepatocyte function.
+          </p>
+          <div class="grid">
+            <div class="cell is-column-gap-1">
+              <div class="juxtapose">
+                <img src="./static/images/real_metastasis.webp" data-label="Acquired HBP" width="256", height="256"/>
+                <img src="./static/images/unet_mid_metastasis.webp" data-label="U-Net" width="256", height="256"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_metastasis.webp" data-label="Acquired HBP" width="256", height="256"/>
+                <img src="./static/images/pgan_metastasis.webp" data-label="pGAN" width="256", height="256"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_metastasis.webp" data-label="Acquired HBP" width="256", height="256"/>
+                <img src="./static/images/ddpm_metastasis.webp" data-label="DDPM" width="256", height="256"/>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <!--/ Metastasis. -->
+
+        <!-- Blood vessels. -->
+        <div class="content is-centered has-text-justified">
+          <h2 class="title is-4">Blood Vessels</h2>
+          <p>
+            Blood vessels play a crucial role in the diagnosis of focal liver disease, as many lesions exhibit characteristic 
+            vascular patterns—such as arterial hyperenhancement or portal venous washout—that aid in differentiating benign 
+            from malignant findings. Clear vessel delineation is therefore essential for reliable diagnostic interpretation.
+          </p>
+          <div class="grid">
+            <div class="cell is-column-gap-1">
+              <div class="juxtapose">
+                <img src="./static/images/real_blood_vessels.webp" data-label="Acquired HBP" width="256", height="256"/>
+                <img src="./static/images/unet_mid_blood_vessels.webp" data-label="U-Net" width="256", height="256"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_blood_vessels.webp" data-label="Acquired HBP" width="256", height="256"/>
+                <img src="./static/images/pgan_blood_vessels.webp" data-label="pGAN" width="256", height="256"/>
+              </div>
+            </div>
+            <div class="cell">
+              <div class="juxtapose">
+                <img src="./static/images/real_blood_vessels.webp" data-label="Acquired HBP" width="256", height="256"/>
+                <img src="./static/images/ddpm_blood_vessels.webp" data-label="DDPM" width="256", height="256"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--/ Blood vessels. -->
+
       </div>
     </div>
-  </div>
-  <!--/ Paper video. -->
-</div>
-
-  <div class="container is-max-desktop">
-
-    <div class="columns is-centered">
-      <!-- unet_mse -->
-      <!-- <div class="column is-one-third">
-        <div class="content">
-          <div class="juxtapose">
-            <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
-            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-          </div>
-        </div>
-      </div> -->
-      <!--/ unet_mse -->
-
-      <!-- unet_mid -->
-      <div class="column is-one-quarter">
-        <div class="content">
-          <div class="juxtapose">
-            <img src="./static/images/unet_mid_hbp.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
-            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-          </div>
-        </div>
-      </div>
-      <!--/ unet_mid -->
-
-      <!-- pgan -->
-      <div class="column is-one-quarter">
-        <div class="content">
-          <div class="juxtapose">
-            <img src="./static/images/pgan_hbp.webp" data-label="pGAN HBP" width="256", height="256"/>
-            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-          </div>
-        </div>
-      </div>
-      <!--/ pgan -->
-
-      <!-- ddpm -->
-      <div class="column is-one-quarter">
-        <div class="content">
-          <div class="juxtapose">
-            <img src="./static/images/ddpm_hbp.webp" data-label="DDPM HBP" width="256", height="256"/>
-            <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-          </div>
-        </div>
-      </div>
-      <!--/ ddpm -->
-    </div>
-</section>
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-
-      <!-- Focal Nodular Hyperplasia. -->
-      <div class="column is-two-fifth">
-        <div class="content">
-          <h2 class="title is-3">Focal Nodular Hyperplasia</h2>
-          <p>
-            Some text about FNHs
-          </p>
-          <div class="columns is-centered">
-            <!-- unet_mse -->
-            <!-- <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
-                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div> -->
-            <!--/ unet_mse -->
-      
-            <!-- unet_mid -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mid_fnh.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
-                  <img src="./static/images/real_fnh.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ unet_mid -->
-      
-            <!-- pgan -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/pgan_fnh.webp" data-label="pGAN HBP" width="256", height="256"/>
-                  <img src="./static/images/real_fnh.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ pgan -->
-      
-            <!-- ddpm -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/ddpm_fnh.webp" data-label="DDPM HBP" width="256", height="256"/>
-                  <img src="./static/images/real_fnh.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ ddpm -->
-          </div>
-        </div>
-      </div>
-      <!--/ Focal Nodular Hyperplasia. -->
-
-      <!-- Adenomatosis. -->
-      <div class="column is-two-fifth">
-        <div class="content">
-          <h2 class="title is-3">Adenomatosis</h2>
-          <p>
-            Some text about Adenomae
-          </p>
-          <div class="columns is-centered">
-            <!-- unet_mse -->
-            <!-- <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
-                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div> -->
-            <!--/ unet_mse -->
-      
-            <!-- unet_mid -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mid_adenomatosis.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
-                  <img src="./static/images/real_adenomatosis.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ unet_mid -->
-      
-            <!-- pgan -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/pgan_adenomatosis.webp" data-label="pGAN HBP" width="256", height="256"/>
-                  <img src="./static/images/real_adenomatosis.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ pgan -->
-      
-            <!-- ddpm -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/ddpm_adenomatosis.webp" data-label="DDPM HBP" width="256", height="256"/>
-                  <img src="./static/images/real_adenomatosis.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ ddpm -->
-          </div>
-        </div>
-      </div>
-      <!--/ Adenomatosis. -->
-
-  </div>
-</section>
-
-<section class="section">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered">
-
-      <!-- Hepatocarcinoma. -->
-      <div class="column is-two-fifth">
-        <div class="content">
-          <h2 class="title is-3">Hepatocellular Carcinoma</h2>
-          <p>
-            Some text about HCCs
-          </p>
-          <div class="columns is-centered">
-            <!-- unet_mse -->
-            <!-- <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
-                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div> -->
-            <!--/ unet_mse -->
-      
-            <!-- unet_mid -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mid_hcc.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
-                  <img src="./static/images/real_hcc.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ unet_mid -->
-      
-            <!-- pgan -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/pgan_hcc.webp" data-label="pGAN HBP" width="256", height="256"/>
-                  <img src="./static/images/real_hcc.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ pgan -->
-      
-            <!-- ddpm -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/ddpm_hcc.webp" data-label="DDPM HBP" width="256", height="256"/>
-                  <img src="./static/images/real_hcc.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ ddpm -->
-          </div>
-        </div>
-      </div>
-      <!--/ Hepatocarcinoma. -->
-
-      <!-- Metastasis. -->
-      <div class="column is-two-fifth">
-        <div class="content">
-          <h2 class="title is-3">Metastasis</h2>
-          <p>
-            Some text about Metastases
-          </p>
-          <div class="columns is-centered">
-            <!-- unet_mse -->
-            <!-- <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mse_hbp.webp" data-label="U-Net_mse HBP" width="256", height="256"/>
-                  <img src="./static/images/real_hbp.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div> -->
-            <!--/ unet_mse -->
-      
-            <!-- unet_mid -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/unet_mid_metastasis.webp" data-label="U-Net_mid HBP" width="256", height="256"/>
-                  <img src="./static/images/real_metastasis.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ unet_mid -->
-      
-            <!-- pgan -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/pgan_metastasis.webp" data-label="pGAN HBP" width="256", height="256"/>
-                  <img src="./static/images/real_metastasis.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ pgan -->
-      
-            <!-- ddpm -->
-            <div class="column is-one-third">
-              <div class="content">
-                <div class="juxtapose">
-                  <img src="./static/images/ddpm_metastasis.webp" data-label="DDPM HBP" width="256", height="256"/>
-                  <img src="./static/images/real_metastasis.webp" data-label="Real HBP" width="256", height="256"/>
-                </div>
-              </div>
-            </div>
-            <!--/ ddpm -->
-          </div>
-        </div>
-      </div>
-      <!--/ Metastasis. -->
   </div>
 </section>
 
@@ -515,8 +446,7 @@
     <h2 class="title">BibTeX</h2>
     <pre><code>@article{hooge_2025,
   author    = {Hooge J., Sanroma-Guell G., Stavropoulou F., Ullmann A., Knobloch G., Klemens M., Schmidt C., Weckbach S., Bolz A.},
-  title     = {Towards Faster Liver MRI: Generating Hepatobiliary Phase MRI with Perceptual and
-    Adversarial Models},
+  title     = {HepatoGEN: Generating Hepatobiliary Phase MRI with Perceptual and Adversarial Models},
   journal   = {arXiv},
   year      = {2025},
 }</code></pre>
